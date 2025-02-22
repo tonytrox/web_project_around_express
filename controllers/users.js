@@ -1,34 +1,39 @@
-const User = require("../models/user");
+const User = require("../models/user"); // se declara el modelo User
 
-const getUsers = (req, res) => {
-  User.find({})
-    .then((users) => res.send(users))
-    .catch(() =>
-      res.status(500).send({ message: "Error al obtener usuarios" })
-    );
+const getUsers = async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.send(users); //envia la respuesta
+  } catch (err) {
+    res.status(500).send({ message: "Error al obtener usuarios" }); //envia el error
+  }
 };
 
 // Obtener un usuario por ID
-const getUserById = (req, res) => {
+const getUserById = async (req, res) => {
   const { userId } = req.params; // Extrae 'userId' de req.params
 
-  User.findById(userId)
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send({ message: "ID de usuario no encontrado" });
-      }
-      return res.send(user);
-    })
-    .catch(() => res.status(500).send({ message: "Error al obtener usuario" }));
+  try {
+    const users = await User.findById(userId); // Busca un usuario por ID
+    if (!users) {
+      return res.status(404).send({ message: "ID de usuario no encontrado" });
+    }
+    res.send(users); //envia la respuesta
+  } catch (err) {
+    res.status(500).send({ message: "Error al obtener usuario" }); //envia el error
+  }
 };
 
 // Crear un nuevo usuario
-const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
+const createUser = async (req, res) => {
+  const { name, about, avatar } = req.body; // Desestructuración de req.body
 
-  User.create({ name, about, avatar })
-    .then((user) => res.status(201).send(user))
-    .catch(() => res.status(500).send({ message: "Error al crear usuario" }));
+  try {
+    const user = await User.create({ name, about, avatar }); // Crea un usuario
+    res.status(201).send(user); //envia la respuesta
+  } catch (err) {
+    res.status(500).send({ message: "Error al crear usuario" }); //envia el error
+  }
 };
 
 module.exports = {

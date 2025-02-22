@@ -1,34 +1,38 @@
-const User = require("../models/card");
+const Card = require("../models/card");
 
-const getCards = (req, res) => {
-  User.find({})
-    .then((cards) => res.send(cards))
-    .catch(() =>
-      res.status(500).send({ message: "Error al obtener tarjetas" })
-    );
+const getCards = async (req, res) => {
+  try {
+    const cards = await Card.find({});
+    res.send(cards);
+  } catch (err) {
+    res.status(500).send({ message: "Error al obtener tarjetas" });
+  }
 };
 
-const createCard = (req, res) => {
+const createCard = async (req, res) => {
   const { name, link } = req.body;
   const owner = req.user._id; // accedemos al ID del usuario
 
-  Card.create({ name, link, owner })
-    .then((card) => res.status(201).send(card))
-    .catch(() => res.status(500).send({ message: "Error al crear tarjeta" }));
+  try {
+    const card = await Card.create({ name, link, owner });
+    res.status(201).send(card);
+  } catch (err) {
+    res.status(500).send({ message: "Error al crear tarjeta" });
+  }
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = async (req, res) => {
   const cardId = req.params.cardId;
 
-  Card.findByIdAndRemove(cardId)
-    .then((card) => {
-      if (!card) {
-        return res.status(404).send({ message: "Tarjeta no encontrada" });
-      }
-    })
-    .catch(() =>
-      res.status(500).send({ message: "Error al eliminar tarjeta" })
-    );
+  try {
+    const card = await Card.findByIdandRemove(cardId);
+    if (!card) {
+      return res.status(404).send({ message: "Tarjeta no encontrada" });
+    }
+    res.send(card);
+  } catch (err) {
+    res.status(500).send({ message: "Error al eliminar tarjeta" });
+  }
 };
 
 module.exports = {

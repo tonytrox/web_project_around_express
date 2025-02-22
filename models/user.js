@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 
+// Validacion de URL
 const urlRegex = /^https?:\/\/(www\.)?[a-zA-Z0-9-._~:/?%#[\]@!$&'()*+,;=]+#?$/;
 
 const userSchema = new mongoose.Schema({
@@ -25,4 +26,5 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("user", userSchema);
+// crecion de modelo
+module.exports = mongoose.model("User", userSchema);
