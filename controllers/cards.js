@@ -1,4 +1,5 @@
 const Card = require("../models/card");
+const { NotFoundError, InvalidDataError } = require("../utils/errorHandler");
 
 const getCards = async (req, res) => {
   try {
@@ -17,7 +18,7 @@ const createCard = async (req, res) => {
     const card = await Card.create({ name, link, owner });
     res.status(201).send(card);
   } catch (err) {
-    res.status(500).send({ message: "Error al crear tarjeta" });
+    throw new InvalidDataError();
   }
 };
 
@@ -25,13 +26,12 @@ const deleteCard = async (req, res) => {
   const cardId = req.params.cardId;
 
   try {
-    const card = await Card.findByIdandRemove(cardId);
-    if (!card) {
-      return res.status(404).send({ message: "Tarjeta no encontrada" });
-    }
+    const card = await Card.findByIdandRemove(cardId).orFail(
+      new NotFoundError("tarjeta no encontrada")
+    );
     res.send(card);
   } catch (err) {
-    res.status(500).send({ message: "Error al eliminar tarjeta" });
+    res.status(err.statusCode || 500).send({ message: err.message });
   }
 };
 
