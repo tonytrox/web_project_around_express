@@ -4,9 +4,9 @@ const { NotFoundError, InvalidDataError } = require("../utils/errorHandler"); //
 const getUsers = async (req, res) => {
   try {
     const users = await User.find({});
-    res.send(users); //envia la respuesta
+    res.send(users);
   } catch (err) {
-    res.status(500).send({ message: "Error al obtener usuarios" }); //envia el error
+    res.status(500).send({ message: "Error al obtener usuarios" });
   }
 };
 
@@ -16,9 +16,9 @@ const getUserById = async (req, res) => {
 
   try {
     const users = await User.findById(userId).orFail(new NotFoundError()); // Busca un usuario por ID
-    res.send(users); //envia la respuesta
+    res.send(users);
   } catch (err) {
-    res.status(err.statusCode || 500).send({ message: err.message }); //envia el error
+    res.status(err.statusCode || 500).send({ message: err.message });
   }
 };
 
@@ -28,9 +28,9 @@ const createUser = async (req, res) => {
 
   try {
     const user = await User.create({ name, about, avatar }); // Crea un usuario
-    res.status(201).send(user); //envia la respuesta
+    res.status(201).send(user);
   } catch (err) {
-    throw new InvalidDataError(); //lanza un error
+    throw new InvalidDataError();
   }
 };
 
